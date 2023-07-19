@@ -39,25 +39,25 @@ const Links = [
 ]
 
 const Navbar = () => {
-    const isUserLoggedIn = true
+    const { data: session } = useSession()
 
     const [providers, setProviders] = useState(null)
     const [toggleDropdown, setToggleDropdown] = useState(false)
 
     useEffect(() => {
-        const setProviders = async () => {
+        const setUpProviders = async () => {
             const response = await getProviders()
 
             setProviders(response)
         }
-        setProviders()
+        setUpProviders()
     }, [])
 
     return (
         <nav className='w-full pt-3 mb-16 flex-between'>
             <Link href='/' className='flex gap-2 flex-center'>
                 <Image
-                    src='images/logo.svg'
+                    src='/images/logo.svg'
                     alt='mine logo'
                     width={40}
                     height={40}
@@ -68,7 +68,7 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className='hidden sm:flex'>
-                {isUserLoggedIn ? (
+                {session?.user ? (
                     <div className='flex gap-3 md:gap-5'>
                         <Link href='/create-prompt' className='black_btn'>
                             Create Post
@@ -82,7 +82,7 @@ const Navbar = () => {
                         </button>
                         <Link href='/profile'>
                             <Image
-                                src='images/logo.svg'
+                                src={session?.user.image}
                                 width={40}
                                 height={40}
                                 className='rounded-full'
@@ -109,10 +109,10 @@ const Navbar = () => {
 
             {/* Mobile Navigation */}
             <div className='relative flex sm:hidden'>
-                {isUserLoggedIn ? (
+                {session?.user ? (
                     <div className='flex'>
                         <Image
-                            src='images/logo.svg'
+                            src={session?.user.image}
                             width={40}
                             height={40}
                             className='rounded-full'
@@ -158,7 +158,7 @@ const Navbar = () => {
                                     className='black_btn'
                                     onClick={() => signIn(provider.id)}
                                 >
-                                    Sign in with {provider.name}
+                                    Sign in
                                 </button>
                             ))}
                     </>
